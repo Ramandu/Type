@@ -1,0 +1,36 @@
+name: Test release (fork only)
+
+# One-off helper for the Ramandu fork: builds the debug APK from this branch and publishes it as a
+# GitHub Release, so it can be installed with Obtainium. Not part of the upstream pull request.
+on:
+  push:
+    branches:
+      - nordic-test-release
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk type-nordic-test.apk
+          gh release delete nordic-test --yes --cleanup-tag || true
+          gh release create nordic-test type-nordic-test.apk \
+            --target "$GITHUB_SHA" \
+            --title "Nordic languages — test build" \
+            --notes "Debug build of the nordic-languages branch, for testing. Installs alongside the regular Type app (app.lightphonekeyboard.debug)."
