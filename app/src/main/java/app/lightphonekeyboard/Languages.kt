@@ -57,7 +57,7 @@ object Languages {
     // Hebrew, Arabic and Mandarin-pinyin dictionaries live in the repo's dicts/ folder (served raw),
     // not on the dicts-v1 release. Downloaded + filtered to the language's letters on-device, same format.
     private fun repoDictUrl(code: String) =
-        "https://raw.githubusercontent.com/KEZO555/light-keyboard/main/dicts/$code.txt"
+        "https://raw.githubusercontent.com/Ramandu/Type/nordic-languages/dicts/$code.txt"
 
     // Offline Vosk speech models (small variants), downloaded on demand like the dictionaries so they
     // stay off the APK. Hosted by the Vosk project. Hebrew has no Vosk model, so it has no entry here.
